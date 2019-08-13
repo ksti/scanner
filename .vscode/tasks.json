@@ -1,0 +1,46 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build for test debug",
+            "type": "shell",
+            // "command": "g++ -std=c++11",
+            "command": "g++",
+            "args": [
+                "-std=c++11",
+                "-I",
+                "/usr/local/Cellar/opencv/4.1.0_2/include/opencv4",
+                "-lopencv_core",
+                "-lopencv_imgproc",
+                "-lopencv_highgui",
+                "-lopencv_imgcodecs",
+                "-D",
+                "DEBUG",
+                "-g",
+                "scanner.cpp",
+                "-o",
+                "out/scanner.debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build for test release",
+            "type": "shell",
+            "command": "g++ scanner.cpp -o out/scanner.release -g `pkg-config --cflags --libs opencv4` -std=c++11",
+            "args": [
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

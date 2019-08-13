@@ -37,7 +37,8 @@ double _distance(Point p1, Point p2)
 void resizeToHeight(Mat src, Mat &dst, int height)
 {
 	Size s = Size(src.cols * (height / double(src.rows)), height);
-	resize(src, dst, s, CV_INTER_AREA);
+	// resize(src, dst, s, CV_INTER_AREA);
+	resize(src, dst, s, INTER_AREA);
 }
 
 void orderPoints(vector<Point> inpts, vector<Point> &ordered)
@@ -101,7 +102,8 @@ void preProcess(Mat src, Mat &dst)
 	cv::Mat imageGrayed;
 	cv::Mat imageOpen, imageClosed, imageBlurred;
 
-	cvtColor(src, imageGrayed, CV_BGR2GRAY);
+	// cvtColor(src, imageGrayed, CV_BGR2GRAY);
+	cvtColor(src, imageGrayed, COLOR_BGR2GRAY);
 
 	cv::Mat structuringElmt = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(4,4));
 	morphologyEx(imageGrayed, imageOpen, cv::MORPH_OPEN, structuringElmt);
@@ -139,14 +141,16 @@ string getOutputFileName(string path, string name)
 int main( int argc, char** argv)
 {
 
-	static const char * const keys = "{ i |image| }";
+	// static const char * const keys = "{ i |image| }";
+	static const char * const keys = "{image i | <none> | Name of image to be loaded for processing. }";
 	CommandLineParser parser(argc, argv, keys);
 
-	string image_name(parser.get<String>("image"));
+	string image_name = parser.get<String>("image");
 
 	if (image_name.empty())
 	{
-	    parser.printParams();
+	    // parser.printParams();
+		parser.printMessage();
 	    return -1;
 	}
 
@@ -170,7 +174,8 @@ int main( int argc, char** argv)
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 	vector<vector<Point> > approx;
-	findContours(edged, contours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+	// findContours(edged, contours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+	findContours(edged, contours, hierarchy, RETR_LIST, CHAIN_APPROX_SIMPLE);
 
 	approx.resize(contours.size());
 	size_t i,j;
@@ -205,7 +210,8 @@ int main( int argc, char** argv)
 #ifndef NDEBUG
 		imwrite(getOutputFileName(image_name, "flat"), warped);
 #endif
-		cvtColor(warped, warped, CV_BGR2GRAY, 1);
+		// cvtColor(warped, warped, CV_BGR2GRAY, 1);
+		cvtColor(warped, warped, COLOR_BGR2GRAY, 1);
 		adaptiveThreshold(warped, warped, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, 15);
 		GaussianBlur(warped, warped, Size(3, 3), 0);
 		imwrite(getOutputFileName(image_name, "scanned"), warped);

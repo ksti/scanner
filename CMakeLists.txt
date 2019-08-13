@@ -4,6 +4,7 @@ find_package( OpenCV REQUIRED )
 
 # adjust the debug options to output more details on stdout
 add_definitions( -DVP_DEBUG -DVP_DEBUG_MODE=0 )
+add_definitions(-std=c++11)
 
 IF(CMAKE_COMPILER_IS_GNUCC)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
